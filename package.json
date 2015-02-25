@@ -2,7 +2,10 @@
   "name": "reactunes-artwork-finder",
   "version": "0.0.1",
   "description": "iTunes Artwork Finder with ReactJs",
-  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marcio/reactunes-artwork-finder.git"
+  },
   "scripts": {
     "build": "browserify js/**/*.jsx js/app.js  > dist/app.js",
     "build:watch": "watch 'npm run build' js"
