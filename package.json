@@ -1,0 +1,32 @@
+{
+  "name": "reactunes-artwork-finder",
+  "version": "0.0.1",
+  "description": "iTunes Artwork Finder with ReactJs",
+  "main": "index.js",
+  "scripts": {
+    "build": "browserify js/**/*.jsx js/app.js  > dist/app.js",
+    "build:watch": "watch 'npm run build' js"
+  },
+  "author": "Marcio Gasparotto",
+  "license": "MIT",
+  "devDependencies": {
+    "browserify": "latest",
+    "jshint": "latest",
+    "react-tools": "0.12.2",
+    "reactify": "^1.0.0",
+    "watch": "latest"
+  },
+  "dependencies": {
+    "react": "0.12.2"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "reactify",
+        {
+          "es6": true
+        }
+      ]
+    ]
+  }
+}
