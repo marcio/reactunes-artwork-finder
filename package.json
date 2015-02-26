@@ -20,6 +20,7 @@
     "watch": "latest"
   },
   "dependencies": {
+    "flux": "^2.0.1",
     "react": "0.12.2"
   },
   "browserify": {
