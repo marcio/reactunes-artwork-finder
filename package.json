@@ -7,7 +7,7 @@
     "url": "https://github.com/marcio/reactunes-artwork-finder.git"
   },
   "scripts": {
-    "build": "browserify js/**/*.jsx js/app.js  > dist/app.js",
+    "build": "browserify js/**/*.jsx js/app.js  > dist/js/app.js && cp css/styles.css dist/css/styles.css",
     "build:watch": "watch 'npm run build' js"
   },
   "author": "Marcio Gasparotto",

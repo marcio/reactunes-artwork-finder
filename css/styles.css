@@ -1,0 +1,17 @@
+
+form {
+    clear: both;
+    margin-bottom: 30px;
+}
+
+form label {
+    width: 30%;
+    display: block;
+    float: left;
+    margin-left: 1%;
+    vertical-align: baseline;
+}
+
+input, select {
+    width: 100%;
+}
