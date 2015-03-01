@@ -1,0 +1,19 @@
+{
+  "name": "reactunes-artwork-finder",
+  "version": "0.0.1",
+  "homepage": "https://github.com/marcio/reactunes-artwork-finder",
+  "authors": [
+    "Marcio Gasparotto <mgasparotto@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "semantic-ui": "~1.10.3"
+  }
+}

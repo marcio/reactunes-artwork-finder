@@ -3,8 +3,10 @@ var React = require("react");
 var Header = React.createClass({
     render: function () {
         return (
-            <header>
-                <h1>React iTunes Artwork</h1>
+            <header className="ui one column page grid">
+                <div className="column">
+                    <h1 className="ui header">React iTunes Artwork</h1>
+                </div>
             </header>
         )
     }
