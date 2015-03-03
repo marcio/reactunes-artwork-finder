@@ -1,13 +1,18 @@
 var React = require("react");
+var ArtworkAction = require('../actions/artwork.actions');
 
 var SearchForm = React.createClass({
     handlerSubmit: function(e) {
+        ArtworkAction.clearResult();
         e.preventDefault();
         var entity = this.refs.entity.getDOMNode().value.trim();
         var term = this.refs.term.getDOMNode().value.trim();
         var country = this.refs.country.getDOMNode().value.trim();
+        var query = {entity: entity, country: country, term: term};
 
-        console.log('Entity: %s | Term: %s | Country: %s', entity, term, country);
+        ArtworkAction.search(query);
+        console.log(query);
+
     },
 
     componentDidMount: function(){

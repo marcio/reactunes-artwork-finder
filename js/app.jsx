@@ -10,11 +10,14 @@ var mountNode = document.getElementById('app');
 var App = React.createClass({
     render: function () {
         return (
-            <div className="row">
-                <div className="column">
-                    <SearchForm />
+
+                <div className="row">
+                    <div className="column">
+                        <SearchForm />
+                        <Result />
+                    </div>
                 </div>
-            </div>
+
         )
     }
 
