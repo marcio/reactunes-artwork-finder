@@ -1,5 +1,7 @@
 var React = require("react");
 var ArtWorkStore = require('../stores/artwork.store');
+var ItemForArtWork = require('./item-for-artwork.jsx');
+var _ = require('lodash');
 
 var Result = React.createClass({
     getInitialState: function(){
@@ -16,49 +18,21 @@ var Result = React.createClass({
 
     _onChange: function() {
         this.setState({data: ArtWorkStore.getResult()});
-        console.log('changed %o', this.state.data);
     },
 
     render: function () {
 
-        function extractUrl(url) {
-            var urlParts = url.replace('.100x100-75', '');
-            return urlParts;
-        }
-
         var arts = this.state.data.map(function(art){
             return (
-                <div className="card" key={art.trackId}>
-                    <div className="image">
-                        <img src={extractUrl(art.artworkUrl100)} />
-                    </div>
-                    <div className="content">
-                        <div className="header">{art.trackName}</div>
-                        <div className="meta">
-                            <a>{art.primaryGenreName}</a>
-                        </div>
-                        <div className="description">
-                        {art.shortDescription}
-                        </div>
-                    </div>
-                    <div className="extra content">
-                        <span className="right floated">
-                            {art.releaseDate}
-                        </span>
-                        <span>
-                            <i className="user icon"></i>
-                            75 Friends
-                        </span>
-                    </div>
-                </div>
+                <ItemForArtWork art={art} key={_.uniqueId()}/>
             )
         });
 
         return (
-
             <div className="ui link cards">
                 {arts}
             </div>
+
         )
     }
 });

@@ -1,10 +1,8 @@
 var AppDispatcher = require('../dispatchers/app.dispatcher');
 var EventEmitter = require('events').EventEmitter;
 var ArtworkConstants = require('../constants/artwork.constants');
-//var Request = require('superagent');
 var Urls = require('../constants/urls.constants');
 var assign = require('object-assign');
-//var _ = require('lodash');
 
 
 var _results = [];
@@ -36,7 +34,7 @@ function search(query) {
     var apiURL = Urls.api + '?term=' + query.term + '&country=' + query.country + '&entity=' + query.entity + '&callback=?';
 
     var request = $.getJSON(apiURL, function () {
-        console.log('Requesting');
+    //do nothing
     });
 
     request.done(function(data) {
