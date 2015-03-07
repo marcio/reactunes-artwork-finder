@@ -1,32 +1,26 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"./js/app.jsx":[function(require,module,exports){
 var React = require('react');
-
-var Header = require('./components/header.jsx');
 var SearchForm = require('./components/search.form.jsx');
 var Result = require('./components/result.jsx');
 
 var mountNode = document.getElementById('app');
 
-
 var App = React.createClass({displayName: "App",
     render: function () {
         return (
-
                 React.createElement("div", {className: "row"}, 
                     React.createElement("div", {className: "column"}, 
                         React.createElement(SearchForm, null), 
                         React.createElement(Result, null)
                     )
                 )
-
         )
     }
-
 });
 
-
 React.render(React.createElement(App, null), mountNode);
-},{"./components/header.jsx":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/header.jsx","./components/result.jsx":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/result.jsx","./components/search.form.jsx":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/search.form.jsx","react":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/node_modules/react/react.js"}],"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/actions/artwork.actions.js":[function(require,module,exports){
+
+},{"./components/result.jsx":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/result.jsx","./components/search.form.jsx":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/search.form.jsx","react":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/node_modules/react/react.js"}],"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/actions/artwork.actions.js":[function(require,module,exports){
 var AppDispatcher = require('../dispatchers/app.dispatcher');
 var ArtworkConstants = require('../constants/artwork.constants');
 
@@ -73,32 +67,19 @@ var ErrorSumary = React.createClass({displayName: "ErrorSumary",
 });
 
 module.exports = ErrorSumary;
-},{"react":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/node_modules/react/react.js"}],"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/header.jsx":[function(require,module,exports){
-var React = require("react");
-
-var Header = React.createClass({displayName: "Header",
-    render: function () {
-        return (
-            React.createElement("header", {className: "ui one column page grid"}, 
-                React.createElement("div", {className: "column"}, 
-                    React.createElement("h1", {className: "ui header"}, "React iTunes Artwork")
-                )
-            )
-        )
-    }
-});
-
-module.exports = Header;
 },{"react":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/node_modules/react/react.js"}],"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/item-for-artwork.jsx":[function(require,module,exports){
 var React = require("react");
-
 
 
 var ItemForArtWork = React.createClass({displayName: "ItemForArtWork",
     render: function () {
 
-        function extractUrl(url) {
-            return url.replace('.100x100-75', '.600x600-75');
+        function extractUrl(url, kind) {
+            var resolution = '.300x300-75';
+            if(kind === 'feature-movie') {
+                resolution = '.500x500-75';
+            }
+            return url.replace('.100x100-75', resolution);
         }
 
         function truncate(str, limit) {
@@ -123,30 +104,48 @@ var ItemForArtWork = React.createClass({displayName: "ItemForArtWork",
         }
 
         return (
-            React.createElement("div", {className: "card", key: this.props.art.trackId}, 
-                React.createElement("div", {className: "image"}, 
-                    React.createElement("img", {src: extractUrl(this.props.art.artworkUrl100)})
-                ), 
-                React.createElement("div", {className: "content"}, 
-                    React.createElement("div", {className: "header"}, this.props.art.trackName), 
-                    React.createElement("div", {className: "meta"}, 
-                        React.createElement("a", null, this.props.art.primaryGenreName)
+            React.createElement("div", {className: "column", key: this.props.art.trackId}, 
+                React.createElement("div", {className: "ui fluid card"}, 
+                    React.createElement("div", {className: "image"}, 
+                        React.createElement("img", {src: extractUrl(this.props.art.artworkUrl100, this.props.art.kind)})
                     ), 
-                    React.createElement("div", {className: "description"}, 
-                        this.props.art.shortDescription || truncate(this.props.art.longDescription, 100)
-                    )
-                ), 
-                React.createElement("div", {className: "extra content"}, 
-                    React.createElement("span", {className: "right floated"}, 
-                            this.props.art.releaseDate
+                    React.createElement("div", {className: "content"}, 
+                        React.createElement("div", {className: "header"}, this.props.art.trackName || this.props.art.artistName), 
+                        React.createElement("div", {className: "meta"}, 
+                            React.createElement("a", null, this.props.art.releaseDate.split('-')[0], " | ", this.props.art.primaryGenreName)
+                        ), 
+                        React.createElement("div", {className: "description"}, 
+                            this.props.art.shortDescription || truncate(this.props.art.longDescription, 100)
+                        )
                     ), 
-                    React.createElement("span", null, 
-                        React.createElement("i", {className: "user icon"}), 
-                        "75 Friends"
+                    React.createElement("div", {className: "extra content"}, 
+                        React.createElement("div", {className: "ui bottom attached button", onClick: this.download}, 
+                            React.createElement("i", {className: "download icon"}), " Download"
+                        )
                     )
                 )
-            )
+             )
         )
+    },
+
+    download: function() {
+
+        var imageParts = this.props.art.artworkUrl100.split('/');
+        var imageFilename = imageParts[imageParts.length - 1];
+
+        imageParts.pop();
+        var baseUrl = imageParts.join('/');
+
+        var re = /\.\d*[x]\d*[-]?\d*/;
+        var newImage = imageFilename.replace(re, "");
+        var imagePath = baseUrl + '/' + newImage;
+
+
+        var link = document.createElement("a");
+        link.download = imageFilename;
+        link.href = imagePath;
+        link.click();
+
     }
 });
 
@@ -157,12 +156,15 @@ var React = require("react");
 var ItemForSelect = React.createClass({displayName: "ItemForSelect",
     render: function () {
         return (
-            React.createElement("div", {className: "item", "data-value": this.props.val}, React.createElement("i", {className: this.props.icon + ' ' + this.props.itemType}), this.props.label)
+            React.createElement("div", {className: "item", "data-value": this.props.val}, 
+              React.createElement("i", {className: this.props.icon + ' ' + this.props.itemType}), this.props.label
+            )
         )
     }
 });
 
 module.exports = ItemForSelect;
+
 },{"react":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/node_modules/react/react.js"}],"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/result.jsx":[function(require,module,exports){
 var React = require("react");
 var ArtWorkStore = require('../stores/artwork.store');
@@ -170,40 +172,50 @@ var ItemForArtWork = require('./item-for-artwork.jsx');
 var _ = require('lodash');
 
 var Result = React.createClass({displayName: "Result",
-    getInitialState: function(){
-        return {data: []};
+    getInitialState: function () {
+        return {data: [], showEmpty: false};
     },
 
-    componentDidMount: function() {
+    componentDidMount: function () {
         ArtWorkStore.addChangeListener(this._onChange);
     },
 
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         ArtWorkStore.removeChangeListener(this._onChange);
     },
 
-    _onChange: function() {
-        this.setState({data: ArtWorkStore.getResult()});
+    _onChange: function () {
+        this.setState({data: ArtWorkStore.getResult(), showEmpty: true});
     },
 
     render: function () {
 
-        var arts = this.state.data.map(function(art){
-            return (
-                React.createElement(ItemForArtWork, {art: art, key: _.uniqueId()})
-            )
-        });
+        var result;
+
+        if (this.state.data.length > 0) {
+            result = this.state.data.map(function (art) {
+                return (
+                    React.createElement(ItemForArtWork, {art: art, key: _.uniqueId()})
+                )
+            });
+        } else {
+            if (this.state.showEmpty) {
+                result = React.createElement("div", {className: "ui text-center centered internally column"}, 
+                    React.createElement("p", {className: "ui orange label"}, "No results found")
+                )
+            }
+        }
 
         return (
-            React.createElement("div", {className: "ui link cards"}, 
-                arts
+            React.createElement("div", {className: "ui three column grid"}, 
+                result
             )
-
         )
     }
 });
 
 module.exports = Result;
+
 },{"../stores/artwork.store":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/stores/artwork.store.js","./item-for-artwork.jsx":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/item-for-artwork.jsx","lodash":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/node_modules/lodash/index.js","react":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/node_modules/react/react.js"}],"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/search.form.jsx":[function(require,module,exports){
 var React = require("react");
 var ArtworkAction = require('../actions/artwork.actions');
@@ -211,8 +223,10 @@ var ItemForSelect = require('./item-for-select.jsx');
 var CountryStore = require('../stores/country.store');
 var EntityStore = require('../stores/entity.store');
 var ErrorSumary = require('./error-sumary.jsx');
+var ArtWorkStore = require('../stores/artwork.store');
 var _ = require('lodash');
 
+var $spinner;
 
 var SearchForm = React.createClass({displayName: "SearchForm",
     getInitialState: function () {
@@ -221,6 +235,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 
     handlerSubmit: function (e) {
         e.preventDefault();
+
         var entity = this.refs.entity.getDOMNode().value.trim();
         var term = this.refs.term.getDOMNode().value.trim();
         var country = this.refs.country.getDOMNode().value.trim();
@@ -229,7 +244,7 @@ var SearchForm = React.createClass({displayName: "SearchForm",
         var validForm = this._validateForm(query);
 
         if (validForm.isValid) {
-            ArtworkAction.clearResult();
+            $spinner.removeClass('hide');
             this.setState({errors: []});
             ArtworkAction.search(query);
         } else {
@@ -240,6 +255,16 @@ var SearchForm = React.createClass({displayName: "SearchForm",
     componentDidMount: function () {
         $(this.refs.entityDropDown.getDOMNode()).dropdown();
         $(this.refs.countryDropDown.getDOMNode()).dropdown();
+        $spinner = $(this.refs.spinner.getDOMNode());
+        ArtWorkStore.addChangeListener(this._onChange);
+    },
+
+    componentWillUnmount: function() {
+        ArtWorkStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function () {
+      $spinner.addClass('hide');
     },
 
     render: function () {
@@ -264,8 +289,8 @@ var SearchForm = React.createClass({displayName: "SearchForm",
         }
 
         return (
-
             React.createElement("div", {className: "ui form segment"}, 
+              React.createElement("div", null, 
                 React.createElement("form", {onSubmit: this.handlerSubmit}, 
                     React.createElement("div", {className: "four fields"}, 
                         React.createElement("div", {className: "field"}, 
@@ -298,7 +323,17 @@ var SearchForm = React.createClass({displayName: "SearchForm",
                             React.createElement("button", {className: "fluid ui teal button"}, "Search")
                         )
                     )
-                ), 
+                )
+              ), 
+              React.createElement("div", {className: "hide", ref: "spinner"}, 
+                React.createElement("div", {className: "spinner"}, 
+                  React.createElement("div", {className: "rect1"}), 
+                  React.createElement("div", {className: "rect2"}), 
+                  React.createElement("div", {className: "rect3"}), 
+                  React.createElement("div", {className: "rect4"}), 
+                  React.createElement("div", {className: "rect5"})
+                )
+              ), 
                 errorSumary
             )
 
@@ -331,7 +366,8 @@ var SearchForm = React.createClass({displayName: "SearchForm",
 });
 
 module.exports = SearchForm;
-},{"../actions/artwork.actions":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/actions/artwork.actions.js","../stores/country.store":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/stores/country.store.js","../stores/entity.store":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/stores/entity.store.js","./error-sumary.jsx":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/error-sumary.jsx","./item-for-select.jsx":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/item-for-select.jsx","lodash":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/node_modules/lodash/index.js","react":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/node_modules/react/react.js"}],"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/constants/artwork.constants.js":[function(require,module,exports){
+
+},{"../actions/artwork.actions":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/actions/artwork.actions.js","../stores/artwork.store":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/stores/artwork.store.js","../stores/country.store":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/stores/country.store.js","../stores/entity.store":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/stores/entity.store.js","./error-sumary.jsx":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/error-sumary.jsx","./item-for-select.jsx":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/components/item-for-select.jsx","lodash":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/node_modules/lodash/index.js","react":"/Users/marcio/Projects/opensource/reactunes-artwork-finder/node_modules/react/react.js"}],"/Users/marcio/Projects/opensource/reactunes-artwork-finder/js/constants/artwork.constants.js":[function(require,module,exports){
 var keyMirror = require('react/lib/keyMirror');
 
 // Define action constants

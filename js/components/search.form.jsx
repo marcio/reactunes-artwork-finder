@@ -4,8 +4,10 @@ var ItemForSelect = require('./item-for-select.jsx');
 var CountryStore = require('../stores/country.store');
 var EntityStore = require('../stores/entity.store');
 var ErrorSumary = require('./error-sumary.jsx');
+var ArtWorkStore = require('../stores/artwork.store');
 var _ = require('lodash');
 
+var $spinner;
 
 var SearchForm = React.createClass({
     getInitialState: function () {
@@ -14,6 +16,7 @@ var SearchForm = React.createClass({
 
     handlerSubmit: function (e) {
         e.preventDefault();
+
         var entity = this.refs.entity.getDOMNode().value.trim();
         var term = this.refs.term.getDOMNode().value.trim();
         var country = this.refs.country.getDOMNode().value.trim();
@@ -22,7 +25,7 @@ var SearchForm = React.createClass({
         var validForm = this._validateForm(query);
 
         if (validForm.isValid) {
-            ArtworkAction.clearResult();
+            $spinner.removeClass('hide');
             this.setState({errors: []});
             ArtworkAction.search(query);
         } else {
@@ -33,6 +36,16 @@ var SearchForm = React.createClass({
     componentDidMount: function () {
         $(this.refs.entityDropDown.getDOMNode()).dropdown();
         $(this.refs.countryDropDown.getDOMNode()).dropdown();
+        $spinner = $(this.refs.spinner.getDOMNode());
+        ArtWorkStore.addChangeListener(this._onChange);
+    },
+
+    componentWillUnmount: function() {
+        ArtWorkStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function () {
+      $spinner.addClass('hide');
     },
 
     render: function () {
@@ -57,8 +70,8 @@ var SearchForm = React.createClass({
         }
 
         return (
-
             <div className="ui form segment">
+              <div>
                 <form onSubmit={this.handlerSubmit}>
                     <div className="four fields">
                         <div className="field">
@@ -92,6 +105,16 @@ var SearchForm = React.createClass({
                         </div>
                     </div>
                 </form>
+              </div>
+              <div className="hide" ref="spinner">
+                <div className="spinner">
+                  <div className="rect1"></div>
+                  <div className="rect2"></div>
+                  <div className="rect3"></div>
+                  <div className="rect4"></div>
+                  <div className="rect5"></div>
+                </div>
+              </div>
                 {errorSumary}
             </div>
 
