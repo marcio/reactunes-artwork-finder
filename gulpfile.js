@@ -16,7 +16,6 @@ var gulp = require('gulp'),
     buffer = require('vinyl-buffer'),
     reactify = require('reactify'),
     uglify = require('gulp-uglify'),
-    minifyCSS = require('gulp-minify-css'),
     del = require('del'),
     notify = require('gulp-notify'),
     browserSync = require('browser-sync'),
@@ -42,7 +41,7 @@ gulp.task('browserSync', function() {
         server: {
             baseDir: './'
         }
-    })
+    });
 });
 
 gulp.task('watchify', function() {
@@ -88,12 +87,6 @@ gulp.task('styles', function() {
         .pipe(reload({stream: true}));
 });
 
-// Ugly hack to bring modernizr in
-//gulp.task('modernizr', function() {
-//    return gulp.src('bower_components/modernizr/modernizr.js')
-//        .pipe(gulp.dest(p.distJs));
-//});
-
 gulp.task('bower-libs', function() {
     var jsFilter = gulpFilter('*.js');
     var cssFilter = gulpFilter('*.css');
@@ -133,7 +126,6 @@ gulp.task('copyThemes', function(){
 });
 
 gulp.task('libs', function() {
-    //gulp.start(['modernizr', 'bower-libs', 'fonts']);
     gulp.start(['bower-libs', 'fonts', 'copyThemes']);
 });
 
